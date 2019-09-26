@@ -1,0 +1,13 @@
+{
+  "name": "BtOnline",
+  "version": "1.0.0",
+  "description": "",
+  "main": "BtOnline.js",
+  "author": "SpiceyWolf, PMONickpop123",
+  "credits": "Authentic, Mittenz",
+  "license": "GPL3",
+  "core": "BanjoTooie",
+  "dry": {
+    "extends": "./ModLoader64/package-dry.json"
+  }
+}

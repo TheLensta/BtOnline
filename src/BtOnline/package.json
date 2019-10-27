@@ -1,11 +1,11 @@
 {
   "name": "BtOnline",
-  "version": "0.1.2",
+  "version": "0.1.1",
   "description": "",
   "main": "BtOnline.js",
   "author": "SpiceyWolf, PMONickpop123",
   "credits": "Authentic, Mittenz",
   "license": "GPL3",
   "core": "BanjoTooie",
-  "updateUrl": "https://www.dropbox.com/s/k961qq68yslhflc/BTO.json?dl=1
+  "updateUrl": "https://raw.githubusercontent.com/hylian-modding/BtOnline/master/update.json"
 }

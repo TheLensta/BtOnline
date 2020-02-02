@@ -14,7 +14,7 @@ import {
 } from 'modloader64_api/NetworkHandler';
 import { InjectCore } from 'modloader64_api/CoreInjection';
 import { Packet } from 'modloader64_api/ModLoaderDefaultImpls';
-import * as API from 'modloader64_api/BT/Imports';
+import * as API from 'BanjoTooie/API/Imports';
 import * as Net from './network/Imports';
 
 export class BtOnline implements IPlugin {

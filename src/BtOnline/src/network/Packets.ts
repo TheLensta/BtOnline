@@ -1,5 +1,5 @@
 import { Packet, UDPPacket } from 'modloader64_api/ModLoaderDefaultImpls';
-import * as API from 'modloader64_api/BT/Imports';
+import * as API from 'BanjoTooie/API/Imports';
 
 export class SyncStorage extends Packet {
   game_flags: Buffer;

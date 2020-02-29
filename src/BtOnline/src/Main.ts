@@ -778,6 +778,10 @@ export class BtOnline implements IPlugin {
 	@ServerNetworkHandler('SyncStorage')
 	onServer_SyncStorage(packet: Net.SyncStorage): void {
 		let sDB: Net.DatabaseServer = this.ModLoader.lobbyManager.getLobbyStorage(packet.lobby, this) as Net.DatabaseServer;
+
+		// Safety check
+		if (sDB === null) return;
+
 		this.ModLoader.logger.info('[Server] Received: {Lobby Storage}');
 		sDB.game_flags = packet.game_flags;
 		sDB.global_flags = packet.global_flags;
@@ -790,6 +794,9 @@ export class BtOnline implements IPlugin {
 	onServer_RequestStorage(packet: Packet): void {
 		let sDB: Net.DatabaseServer = this.ModLoader.lobbyManager.getLobbyStorage(packet.lobby, this) as Net.DatabaseServer;
 
+		// Safety check
+		if (sDB === null) return;
+
 		this.ModLoader.logger.info('[Server] Sending: {Lobby Storage}');
 		let pData = new Net.SyncStorage(packet.lobby, sDB.game_flags, sDB.global_flags, sDB.jiggy_wiggy_challenge, sDB.health_upgrade_level, sDB.jinjo);
 		this.ModLoader.serverSide.sendPacketToSpecificPlayer(pData, packet.player);
@@ -800,6 +807,10 @@ export class BtOnline implements IPlugin {
 		this.ModLoader.logger.info('[Server] Received: {Game Flags}');
 
 		let sDB: Net.DatabaseServer = this.ModLoader.lobbyManager.getLobbyStorage(packet.lobby, this) as Net.DatabaseServer;
+
+		// Safety check
+		if (sDB === null) return;
+
 		let data: Buffer = sDB.game_flags;
 		let count: number = data.byteLength;
 		let i = 0;
@@ -824,6 +835,10 @@ export class BtOnline implements IPlugin {
 		this.ModLoader.logger.info('[Server] Received: {Global Flags}');
 
 		let sDB: Net.DatabaseServer = this.ModLoader.lobbyManager.getLobbyStorage(packet.lobby, this) as Net.DatabaseServer;
+
+		// Safety check
+		if (sDB === null) return;
+
 		let data: Buffer = sDB.global_flags;
 		let count: number = data.byteLength;
 		let i = 0;
@@ -848,6 +863,10 @@ export class BtOnline implements IPlugin {
 		this.ModLoader.logger.info('[Server] Received: {Jiggywiggy Challenge}');
 
 		let sDB: Net.DatabaseServer = this.ModLoader.lobbyManager.getLobbyStorage(packet.lobby, this) as Net.DatabaseServer;
+
+		// Safety check
+		if (sDB === null) return;
+
 		let data: number = sDB.jiggy_wiggy_challenge;
 		let needUpdate = false;
 
@@ -868,6 +887,10 @@ export class BtOnline implements IPlugin {
 		this.ModLoader.logger.info('[Server] Received: {Health Upgrades}');
 
 		let sDB: Net.DatabaseServer = this.ModLoader.lobbyManager.getLobbyStorage(packet.lobby, this) as Net.DatabaseServer;
+
+		// Safety check
+		if (sDB === null) return;
+
 		let data: number = sDB.health_upgrade_level;
 		let needUpdate = false;
 
@@ -888,6 +911,10 @@ export class BtOnline implements IPlugin {
 		this.ModLoader.logger.info('[Server] Received: {Jinjos}');
 
 		let sDB: Net.DatabaseServer = this.ModLoader.lobbyManager.getLobbyStorage(packet.lobby, this) as Net.DatabaseServer;
+
+		// Safety check
+		if (sDB === null) return;
+
 		let data: Buffer = sDB.jinjo;
 		let count: number = data.byteLength;
 		let i = 0;

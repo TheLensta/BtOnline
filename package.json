@@ -44,5 +44,8 @@
   "bugs": {
     "url": "https://github.com/hylian-modding/BtOnline/issues"
   },
-  "homepage": "https://github.com/hylian-modding/BtOnline#readme"
+  "homepage": "https://github.com/hylian-modding/BtOnline#readme",
+  "modloader64_deps": {
+    "BanjoTooie": "https://github.com/hylian-modding/Core-BanjoTooie"
+  }
 }

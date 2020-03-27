@@ -95,14 +95,23 @@ export class BtOnline implements IPlugin {
 		// Check if we are in the Jiggywiggy's Temple. If so, do not sync ANYTHING
 		if (this.core.runtime.current_map !== 0x151) {
 			for (i = 0; i < count; i++) {
+				if (i === 3) continue; //CHEATS 1
+				if (i === 4) continue; //CHEATS 2
+				if (i === 103) continue; //CHEATS 3
+				if (i === 112) continue; //CHEATS 4
+				if (i === 161) continue; //CHEATS 5
+				if (i === 162) continue; //CHEATS 6
 				if (i === 17) continue; // Klungo 3 Potion chosen
 				if (i === 19) continue; // Klungo 1 Potion chosen
+				if (i === 44) continue; // TDL Wigwam Big/Small fix
 				if (i === 50) continue; // Klungo 2 Potion chosen
 				if (i === 80) continue; // MT Snake Jiggy
+				if (i === 81) continue; // JRL Atlantis crash fix
 				if (i === 94) continue; // Klungo 1-3 defeated
 				if (i === 102) continue; // Jiggywiggy's Challenge
 				if (i === 106) continue; // Jinjo Randomizer
-				if (i === 152) continue; // Honey B Health Upgrades
+				if (i === 152) continue; // Honey B Health Upgrades & Train Fix 1
+				if (i === 153) continue; // Train Fix 2
 				if (i === 170) continue; // Bottles Energy Restored
 				if (bufData[i] === bufStorage[i]) continue;
 
@@ -110,6 +119,116 @@ export class BtOnline implements IPlugin {
 				this.core.save.game_flags.set(i, bufData[i]);
 				needUpdate = true;
 			}
+
+			//START OF CHEATS
+			//Sync stolen bytes using normal method to prevent missed flags
+			if (bufData[3] !== bufStorage[3]) {
+				bufData[3] |= bufStorage[3];
+				this.core.save.game_flags.set(3, bufData[3]);
+
+					if (bufData[3] !== bufStorage[3]) {
+					needUpdate = true;
+				}
+			}
+
+			if (bufData[4] !== bufStorage[4]) {
+				bufData[4] |= bufStorage[4];
+				this.core.save.game_flags.set(4, bufData[4]);
+				
+					if (bufData[4] !== bufStorage[4]) {
+					needUpdate = true;
+				}
+			}
+
+			if (bufData[103] !== bufStorage[103]) {
+				bufData[103] |= bufStorage[103];
+				this.core.save.game_flags.set(103, bufData[103]);
+				
+					if (bufData[103] !== bufStorage[103]) {
+					needUpdate = true;
+				}
+			}
+
+			if (bufData[112] !== bufStorage[112]) {
+				bufData[112] |= bufStorage[112];
+				this.core.save.game_flags.set(112, bufData[112]);
+				
+					if (bufData[112] !== bufStorage[112]) {
+					needUpdate = true;
+				}
+			}
+
+			if (bufData[161] !== bufStorage[161]) {
+				bufData[161] |= bufStorage[161];
+				this.core.save.game_flags.set(161, bufData[161]);
+				
+					if (bufData[161] !== bufStorage[161]) {
+					needUpdate = true;
+				}
+			}
+
+			if (bufData[162] !== bufStorage[162]) {
+				bufData[162] |= bufStorage[162];
+				this.core.save.game_flags.set(162, bufData[162]);
+				
+					if (bufData[162] !== bufStorage[162]) {
+					needUpdate = true;
+				}
+			}
+
+			//Check for controller input (L + R) to enable cheats
+			if (this.ModLoader.emulator.rdramRead16(0x081084) === 0x0030) {
+
+				//All Worlds Unlocked
+				bufData[4] |= 0x10;
+				this.core.save.game_flags.set(4, bufData[4]);
+
+				if (bufData[4] !== bufStorage[4]) {
+					needUpdate = true;
+				}
+
+				//Fallproof
+				bufData[161] |= 0x40;
+				this.core.save.game_flags.set(161, bufData[161]);
+
+				if (bufData[161] !== bufStorage[161]) {
+					needUpdate = true;
+				}
+
+				//Unlimited Eggs required to be enabled whilst on Cheato page
+				//Setting up warp pad "MT wigwam" and opened temple door to access cheat page.
+				bufData[103] |= 0x40;
+				this.core.save.game_flags.set(103, bufData[103]);
+
+				if (bufData[103] !== bufStorage[103]) {
+					needUpdate = true;
+				}
+
+				bufData[112] |= 0x80;
+				this.core.save.game_flags.set(112, bufData[112]);
+
+				if (bufData[112] !== bufStorage[112]) {
+					needUpdate = true;
+				}
+
+				//Unlimited Eggs/Feathers Cheat Available in Cheato's Page
+				bufData[3] |= 0x04;
+				this.core.save.game_flags.set(3, bufData[3]);
+
+				if (bufData[3] !== bufStorage[3]) {
+					needUpdate = true;
+				}
+
+				//Invincibility & Fast Banjo
+				bufData[162] |= 0x14;
+				this.core.save.game_flags.set(162, bufData[162]);
+
+				if (bufData[162] !== bufStorage[162]) {
+					needUpdate = true;
+				}	
+			}
+			//END OF CHEATS
+
 
 			// Klungo 1 Potion chosen
 			if (bufData[19] !== bufStorage[19]) {
@@ -147,6 +266,19 @@ export class BtOnline implements IPlugin {
 				}
 			}
 
+			//TDL Wigwam Big/Small Bit Ignore
+			if (bufData[44] !== bufStorage[44]) {
+				bufData[44] |= bufStorage[44];
+				this.core.save.game_flags.set(44, bufData[44]);
+
+				bufData[44] &= 0xfb;
+				bufStorage[44] &= 0xfb;
+
+				if (bufData[44] !== bufStorage[44]) {
+					needUpdate = true;
+				}
+			}
+
 			// MT Snake Jiggy
 			if (bufData[80] !== bufStorage[80]) {
 				bufData[80] |= bufStorage[80];
@@ -156,6 +288,19 @@ export class BtOnline implements IPlugin {
 				bufStorage[80] &= 0xef;
 
 				if (bufData[80] !== bufStorage[80]) {
+					needUpdate = true;
+				}
+			}
+
+			// JRL Atlantis crash fix
+			if (bufData[81] !== bufStorage[81]) {
+				bufData[81] |= bufStorage[81];
+				this.core.save.game_flags.set(81, bufData[81]);
+
+				bufData[81] &= 0xfb;
+				bufStorage[81] &= 0xfb;
+
+				if (bufData[81] !== bufStorage[81]) {
 					needUpdate = true;
 				}
 			}
@@ -215,15 +360,28 @@ export class BtOnline implements IPlugin {
 			// Handle health upgrades.
 			this.handle_health_upgrades(bufData);
 
-			// Honey B Health Upgrades
+			// Honey B Health Upgrades & Ignore Train Bits 5,6,7
 			if (bufData[152] !== bufStorage[152]) {
 				bufData[152] |= bufStorage[152];
 				this.core.save.game_flags.set(152, bufData[152]);
 
-				bufData[152] &= 0xe3;
-				bufStorage[152] &= 0xe3;
+				bufData[152] &= 0x03;
+				bufStorage[152] &= 0x03;
 
 				if (bufData[152] !== bufStorage[152]) {
+					needUpdate = true;
+				}
+			}
+
+			//Train Fix 2 (Ignore Bits 0,1,2)
+			if (bufData[153] !== bufStorage[153]) {
+				bufData[153] |= bufStorage[153];
+				this.core.save.game_flags.set(153, bufData[153]);
+
+				bufData[153] &= 0xf8;
+				bufStorage[153] &= 0xf8;
+
+				if (bufData[153] !== bufStorage[153]) {
 					needUpdate = true;
 				}
 			}
@@ -240,6 +398,7 @@ export class BtOnline implements IPlugin {
 					needUpdate = true;
 				}
 			}
+
 		} else {
 			// Inside of Jiggywiggy Temple
 			this.handle_jiggywiggy_temple(bufData, bufStorage);

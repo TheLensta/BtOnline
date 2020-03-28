@@ -105,6 +105,7 @@ export class BtOnline implements IPlugin {
 				if (i === 19) continue; // Klungo 1 Potion chosen
 				if (i === 44) continue; // TDL Wigwam Big/Small fix
 				if (i === 50) continue; // Klungo 2 Potion chosen
+				if (i === 66) continue; // JRL Sea Bottom Crash Fix
 				if (i === 80) continue; // MT Snake Jiggy
 				if (i === 81) continue; // JRL Atlantis crash fix
 				if (i === 94) continue; // Klungo 1-3 defeated
@@ -275,6 +276,19 @@ export class BtOnline implements IPlugin {
 				bufStorage[44] &= 0xfb;
 
 				if (bufData[44] !== bufStorage[44]) {
+					needUpdate = true;
+				}
+			}
+
+			// JRL Sea Bottom Crash Fix
+			if (bufData[66] !== bufStorage[66]) {
+				bufData[66] |= bufStorage[66];
+				this.core.save.game_flags.set(66, bufData[66]);
+
+				bufData[66] &= 0xf7;
+				bufStorage[66] &= 0xf7;
+
+				if (bufData[66] !== bufStorage[66]) {
 					needUpdate = true;
 				}
 			}

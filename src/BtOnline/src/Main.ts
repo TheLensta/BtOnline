@@ -108,6 +108,7 @@ export class BtOnline implements IPlugin {
 				if (i === 66) continue; // JRL Sea Bottom Crash Fix
 				if (i === 80) continue; // MT Snake Jiggy
 				if (i === 81) continue; // JRL Atlantis crash fix
+				if (i === 89) continue; // JRL Smugglers Cavern Crash Fix
 				if (i === 94) continue; // Klungo 1-3 defeated
 				if (i === 102) continue; // Jiggywiggy's Challenge
 				if (i === 106) continue; // Jinjo Randomizer
@@ -315,6 +316,19 @@ export class BtOnline implements IPlugin {
 				bufStorage[81] &= 0xfb;
 
 				if (bufData[81] !== bufStorage[81]) {
+					needUpdate = true;
+				}
+			}
+
+			// JRL Smugglers Cavern Crash Fix
+			if (bufData[89] !== bufStorage[89]) {
+				bufData[89] |= bufStorage[89];
+				this.core.save.game_flags.set(89, bufData[89]);
+
+				bufData[89] &= 0xdf;
+				bufStorage[89] &= 0xdf;
+
+				if (bufData[89] !== bufStorage[89]) {
 					needUpdate = true;
 				}
 			}

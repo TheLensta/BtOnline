@@ -464,7 +464,12 @@ export class BtOnline implements IPlugin {
 		this.handle_sns_eggs_totals(bufData);
 	}
 
+	//REMOVING GLOBAL FLAGS BECAUSE MOSTLY UNKNOWNS AND CONFIG
+	// Should be easier to test and work out what to put back in if anything.
+	
 	handle_global_flags(bufData: Buffer, bufStorage: Buffer): void {
+		
+		/*
 		// Initializers
 		let pData: Net.SyncBuffered;
 		let i: number;
@@ -478,6 +483,7 @@ export class BtOnline implements IPlugin {
 		needUpdate = false;
 
 		for (i = 0; i < count; i++) {
+			if (i < 2) continue; // Some widescreen enable and screen alignment flags
 			if (i > 11 && i < 14) continue; // ???
 			if (bufData[i] === bufStorage[i]) continue;
 
@@ -512,8 +518,9 @@ export class BtOnline implements IPlugin {
 			this.cDB.global_flags = bufData;
 			pData = new Net.SyncBuffered(this.ModLoader.clientLobby, 'SyncGlobalFlags', bufData, false);
 			this.ModLoader.clientSide.sendPacket(pData);
-		}
+		}*/
 	}
+	
 
 	handle_moves(bufData: Buffer, bufStorage: Buffer) {
 		// Check for Restoring Health, Eggs, and Feathers.

@@ -103,7 +103,7 @@ export class BtOnline implements IPlugin {
 				if (i === 162) continue; //CHEATS 6
 				if (i === 17) continue; // Klungo 3 Potion chosen
 				if (i === 19) continue; // Klungo 1 Potion chosen & Maggies Jiggy Bit Ignore
-				if (i === 44) continue; // TDL Wigwam Big/Small fix
+				if (i === 44) continue; // TDL Wigwam Big/Small fix & Scrat Heal (Scrotty Family Quest)
 				if (i === 50) continue; // Klungo 2 Potion chosen
 				if (i === 66) continue; // JRL Sea Bottom Crash Fix
 				if (i === 80) continue; // MT Snake Jiggy
@@ -115,6 +115,7 @@ export class BtOnline implements IPlugin {
 				if (i === 152) continue; // Honey B Health Upgrades & Train Fix 1
 				if (i === 153) continue; // Train Fix 2
 				if (i === 170) continue; // Bottles Energy Restored
+				if (i === 172) continue; // Scrut Rescue Fix (Scrotty Family Quest)
 				if (bufData[i] === bufStorage[i]) continue;
 
 				bufData[i] |= bufStorage[i];
@@ -268,13 +269,13 @@ export class BtOnline implements IPlugin {
 				}
 			}
 
-			//TDL Wigwam Big/Small Bit Ignore
+			//TDL Wigwam Big/Small Bit Ignore & Scrat Heal Fix (Scrotty Family Quest)
 			if (bufData[44] !== bufStorage[44]) {
 				bufData[44] |= bufStorage[44];
 				this.core.save.game_flags.set(44, bufData[44]);
 
-				bufData[44] &= 0xfb;
-				bufStorage[44] &= 0xfb;
+				bufData[44] &= 0xf9;
+				bufStorage[44] &= 0xf9;
 
 				if (bufData[44] !== bufStorage[44]) {
 					needUpdate = true;
@@ -401,13 +402,13 @@ export class BtOnline implements IPlugin {
 				}
 			}
 
-			//Train Fix 2 (Ignore Bits 0,1,2)
+			//Train Fix 2 (Ignore Bits 0,1,2,3)
 			if (bufData[153] !== bufStorage[153]) {
 				bufData[153] |= bufStorage[153];
 				this.core.save.game_flags.set(153, bufData[153]);
 
-				bufData[153] &= 0xf8;
-				bufStorage[153] &= 0xf8;
+				bufData[153] &= 0xf0;
+				bufStorage[153] &= 0xf0;
 
 				if (bufData[153] !== bufStorage[153]) {
 					needUpdate = true;
@@ -423,6 +424,19 @@ export class BtOnline implements IPlugin {
 				bufStorage[170] &= 0xfe;
 
 				if (bufData[170] !== bufStorage[170]) {
+					needUpdate = true;
+				}
+			}
+
+			// Scrut Rescue Fix
+			if (bufData[172] !== bufStorage[172]) {
+				bufData[172] |= bufStorage[172];
+				this.core.save.game_flags.set(172, bufData[172]);
+
+				bufData[172] &= 0xfe;
+				bufStorage[172] &= 0xfe;
+
+				if (bufData[172] !== bufStorage[172]) {
 					needUpdate = true;
 				}
 			}

@@ -102,7 +102,7 @@ export class BtOnline implements IPlugin {
 				if (i === 161) continue; //CHEATS 5
 				if (i === 162) continue; //CHEATS 6
 				if (i === 17) continue; // Klungo 3 Potion chosen
-				if (i === 19) continue; // Klungo 1 Potion chosen
+				if (i === 19) continue; // Klungo 1 Potion chosen & Maggies Jiggy Bit Ignore
 				if (i === 44) continue; // TDL Wigwam Big/Small fix
 				if (i === 50) continue; // Klungo 2 Potion chosen
 				if (i === 66) continue; // JRL Sea Bottom Crash Fix
@@ -232,13 +232,13 @@ export class BtOnline implements IPlugin {
 			//END OF CHEATS
 
 
-			// Klungo 1 Potion chosen
+			// Klungo 1 Potion chosen & Maggies Bit Ignore
 			if (bufData[19] !== bufStorage[19]) {
 				bufData[19] |= bufStorage[19];
 				this.core.save.game_flags.set(19, bufData[19]);
 
-				bufData[19] &= 0xfd;
-				bufStorage[19] &= 0xfd;
+				bufData[19] &= 0xf5;
+				bufStorage[19] &= 0xf5;
 				if (bufData[19] !== bufStorage[19]) {
 					needUpdate = true;
 				}

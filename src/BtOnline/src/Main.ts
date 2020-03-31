@@ -103,11 +103,14 @@ export class BtOnline implements IPlugin {
 				if (i === 162) continue; //CHEATS 6
 				if (i === 17) continue; // Klungo 3 Potion chosen
 				if (i === 19) continue; // Klungo 1 Potion chosen & Maggies Jiggy Bit Ignore
+				if (i === 39) continue; // (HFP Lava Switch / JRL Swimming Pool Desync Fix)
 				if (i === 44) continue; // TDL Wigwam Big/Small fix & Scrat Heal (Scrotty Family Quest)
-				if (i === 50) continue; // Klungo 2 Potion chosen
+				if (i === 50) continue; // Klungo 2 Potion chosen & GI: Quality Control Room Fix
+				if (i === 52) continue; // Sabreman Rescue Fix
 				if (i === 66) continue; // JRL Sea Bottom Crash Fix
 				if (i === 80) continue; // MT Snake Jiggy
 				if (i === 81) continue; // JRL Atlantis crash fix
+				if (i === 84) continue; // In map CCL mountain exterior (precautionary desync)
 				if (i === 89) continue; // JRL Smugglers Cavern Crash Fix
 				if (i === 94) continue; // Klungo 1-3 defeated
 				if (i === 102) continue; // Jiggywiggy's Challenge
@@ -179,8 +182,8 @@ export class BtOnline implements IPlugin {
 				}
 			}
 
-			//Check for controller input (L + R) to enable cheats
-			if (this.ModLoader.emulator.rdramRead16(0x081084) === 0x0030) {
+			//Check for controller input (L + R + D-Up) to enable cheats
+			if (this.ModLoader.emulator.rdramRead16(0x081084) === 0x0830) {
 
 				//All Worlds Unlocked
 				bufData[4] |= 0x10;
@@ -245,13 +248,13 @@ export class BtOnline implements IPlugin {
 				}
 			}
 
-			// Klungo 2 Potion chosen
+			// Klungo 2 Potion chosen (bit 2)  & GI: Quality Control Room Fix (bit 5)
 			if (bufData[50] !== bufStorage[50]) {
 				bufData[50] |= bufStorage[50];
 				this.core.save.game_flags.set(50, bufData[50]);
 
-				bufData[50] &= 0xfb;
-				bufStorage[50] &= 0xfb;
+				bufData[50] &= 0xdb;
+				bufStorage[50] &= 0xdb;
 				if (bufData[50] !== bufStorage[50]) {
 					needUpdate = true;
 				}
@@ -269,6 +272,19 @@ export class BtOnline implements IPlugin {
 				}
 			}
 
+			// (HFP Lava Switch / JRL Swimming Pool Desync Fix)
+			if (bufData[39] !== bufStorage[39]) {
+				bufData[39] |= bufStorage[39];
+				this.core.save.game_flags.set(39, bufData[39]);
+
+				bufData[39] &= 0x7f;
+				bufStorage[39] &= 0x7f;
+
+				if (bufData[39] !== bufStorage[39]) {
+					needUpdate = true;
+				}
+			}
+
 			//TDL Wigwam Big/Small Bit Ignore & Scrat Heal Fix (Scrotty Family Quest)
 			if (bufData[44] !== bufStorage[44]) {
 				bufData[44] |= bufStorage[44];
@@ -278,6 +294,19 @@ export class BtOnline implements IPlugin {
 				bufStorage[44] &= 0xf9;
 
 				if (bufData[44] !== bufStorage[44]) {
+					needUpdate = true;
+				}
+			}
+
+			// Sabreman Rescue Fix
+			if (bufData[52] !== bufStorage[52]) {
+				bufData[52] |= bufStorage[52];
+				this.core.save.game_flags.set(52, bufData[52]);
+
+				bufData[52] &= 0xfb;
+				bufStorage[52] &= 0xfb;
+
+				if (bufData[52] !== bufStorage[52]) {
 					needUpdate = true;
 				}
 			}
@@ -317,6 +346,19 @@ export class BtOnline implements IPlugin {
 				bufStorage[81] &= 0xfb;
 
 				if (bufData[81] !== bufStorage[81]) {
+					needUpdate = true;
+				}
+			}
+
+			// In map CCL mountain exterior (precautionary desync)
+			if (bufData[84] !== bufStorage[84]) {
+				bufData[84] |= bufStorage[84];
+				this.core.save.game_flags.set(84, bufData[84]);
+
+				bufData[84] &= 0x7f;
+				bufStorage[84] &= 0x7f;
+
+				if (bufData[84] !== bufStorage[84]) {
 					needUpdate = true;
 				}
 			}
@@ -477,13 +519,10 @@ export class BtOnline implements IPlugin {
 		// Update Stop n Swap Egg Totals.
 		this.handle_sns_eggs_totals(bufData);
 	}
-
-	//REMOVING GLOBAL FLAGS BECAUSE MOSTLY UNKNOWNS AND CONFIG
-	// Should be easier to test and work out what to put back in if anything.
 	
 	handle_global_flags(bufData: Buffer, bufStorage: Buffer): void {
 		
-		/*
+		
 		// Initializers
 		let pData: Net.SyncBuffered;
 		let i: number;
@@ -496,6 +535,69 @@ export class BtOnline implements IPlugin {
 		count = bufData.byteLength;
 		needUpdate = false;
 
+		for (i = 0; i < count; i++) {
+			if (i < 2) continue; // Ignore screen Alignment flags and an unknown
+			if (i === 3) continue; // Filter unknowns inside boss replays byte
+			if (i === 4) continue; // Filter unknowns byte
+			if (i === 5) continue; // Filter unknowns inside minigame replay byte
+			if (i === 9) continue; // Filter unknowns byte
+			if (i === 10) continue; // Sync Jinjo in multiplayer bit
+			if (i > 10) continue; // Ignore everything else
+			if (bufData[i] === bufStorage[i]) continue;
+
+			bufData[i] |= bufStorage[i];
+			this.core.save.global_flags.set(i, bufData[i]);
+			needUpdate = true;
+		}
+
+		// Filter unknowns inside boss replays byte
+		if (bufData[3] !== bufStorage[3]) {
+			bufData[3] |= bufStorage[3];
+			this.core.save.global_flags.set(3, bufData[3]);
+
+			bufData[3] &= 0x1f;
+			bufStorage[3] &= 0x1f;
+
+			if (bufData[3] !== bufStorage[3]) {
+				needUpdate = true;
+			}
+		}
+
+		// Filter unknowns inside minigame replay byte
+		if (bufData[5] !== bufStorage[5]) {
+			bufData[5] |= bufStorage[5];
+			this.core.save.global_flags.set(5, bufData[5]);
+
+			bufData[5] &= 0xf8;
+			bufStorage[5] &= 0xf8;
+
+			if (bufData[5] !== bufStorage[5]) {
+				needUpdate = true;
+			}
+		}
+
+		// Sync Jinjo in multiplayer bit
+		if (bufData[10] !== bufStorage[10]) {
+			bufData[10] |= bufStorage[10];
+			this.core.save.global_flags.set(10, bufData[10]);
+
+			bufData[10] &= 0x08;
+			bufStorage[10] &= 0x08;
+
+			if (bufData[10] !== bufStorage[10]) {
+				needUpdate = true;
+			}
+		}
+		
+		if (needUpdate) {
+			this.cDB.global_flags = bufData;
+			pData = new Net.SyncBuffered(this.ModLoader.clientLobby, 'SyncGlobalFlags', bufData, false);
+			this.ModLoader.clientSide.sendPacket(pData);
+		}
+	}
+
+		// START OLD GLOBAL FLAGS SYNC
+		/*
 		for (i = 0; i < count; i++) {
 			if (i < 2) continue; // Some widescreen enable and screen alignment flags
 			if (i > 11 && i < 14) continue; // ???
@@ -526,14 +628,10 @@ export class BtOnline implements IPlugin {
 			bufStorage[13] &= 0xef;
 			if (bufData[13] !== bufStorage[13])
 				needUpdate = true;
-		}
-
-		if (needUpdate) {
-			this.cDB.global_flags = bufData;
-			pData = new Net.SyncBuffered(this.ModLoader.clientLobby, 'SyncGlobalFlags', bufData, false);
-			this.ModLoader.clientSide.sendPacket(pData);
 		}*/
-	}
+		//END OLD GLOBAL FLAGS SYNC
+
+		
 	
 
 	handle_moves(bufData: Buffer, bufStorage: Buffer) {

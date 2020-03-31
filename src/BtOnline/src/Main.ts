@@ -101,6 +101,7 @@ export class BtOnline implements IPlugin {
 				if (i === 112) continue; //CHEATS 4
 				if (i === 161) continue; //CHEATS 5
 				if (i === 162) continue; //CHEATS 6
+				if (i === 13) continue; // Mumbo Magic on Chuffy desync until dynamic sync
 				if (i === 17) continue; // Klungo 3 Potion chosen
 				if (i === 19) continue; // Klungo 1 Potion chosen & Maggies Jiggy Bit Ignore
 				if (i === 39) continue; // (HFP Lava Switch / JRL Swimming Pool Desync Fix)
@@ -268,6 +269,18 @@ export class BtOnline implements IPlugin {
 				bufData[17] &= 0x7f;
 				bufStorage[17] &= 0x7f;
 				if (bufData[17] !== bufStorage[17]) {
+					needUpdate = true;
+				}
+			}
+
+			// Mumbo Magic on Chuffy desync until dynamic sync
+			if (bufData[13] !== bufStorage[13]) {
+				bufData[13] |= bufStorage[13];
+				this.core.save.game_flags.set(13, bufData[13]);
+
+				bufData[13] &= 0xdf;
+				bufStorage[13] &= 0xdf;
+				if (bufData[13] !== bufStorage[13]) {
 					needUpdate = true;
 				}
 			}
